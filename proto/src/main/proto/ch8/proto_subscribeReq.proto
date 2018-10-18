@@ -1,0 +1,8 @@
+package com.mason.proto;
+
+message SubscribeReq {
+  required int32 subReqId = 1;
+  required string userName = 2;
+  required string productName = 3;
+  repeated string address = 4;
+}

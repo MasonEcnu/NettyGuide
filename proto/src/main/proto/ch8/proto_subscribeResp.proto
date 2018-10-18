@@ -1,0 +1,7 @@
+package com.mason.proto;
+
+message SubscribeResp {
+  required int32 subReqId = 1;
+  required int32 respCode = 2;
+  required string desc = 3;
+}

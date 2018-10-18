@@ -1,0 +1,36 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.0'
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'com.google.protobuf'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+sourceSets {
+    main.resources {
+        srcDir 'src/main/proto/ch8'
+    }
+}
+
+allprojects {
+    repositories {
+        mavenCentral()
+    }
+
+    protobuf {
+        protoc {
+            //noinspection GroovyAssignabilityCheck
+            artifact = 'com.google.protobuf:protoc:2.6.1'
+        }
+        generatedFilesBaseDir = "$projectDir/src"
+    }
+}
+
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
