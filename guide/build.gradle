@@ -1,2 +1,12 @@
-apply plugin: 'java'
-apply plugin: 'kotlin'
+plugins {
+  id 'java'
+  id 'org.jetbrains.kotlin.jvm' version '1.2.70'
+}
+
+dependencies {
+  compile group: 'io.netty', name: 'netty-all', version: '5.0.0.Alpha1'
+  compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+  compile group: 'org.msgpack', name: 'msgpack', version: '0.6.12'
+  compile group: 'org.jboss.marshalling', name: 'jboss-marshalling', version: '2.0.6.Final'
+  testCompile group: 'org.jboss.marshalling', name: 'jboss-marshalling-serial', version: '2.0.6.Final'
+}
