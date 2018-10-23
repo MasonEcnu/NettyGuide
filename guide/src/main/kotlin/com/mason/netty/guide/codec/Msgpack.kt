@@ -21,6 +21,7 @@ class MsgpackDecoder : MessageToMessageDecoder<ByteBuf>() {
     out.add(msgpack.read(array))
   }
 
+  @Suppress("OverridingDeprecatedMember")
   override fun exceptionCaught(ctx: ChannelHandlerContext, cause: Throwable) {
     ctx.close()
     printError(cause)
@@ -34,6 +35,7 @@ class MsgpackEncoder : MessageToByteEncoder<Any>() {
     out.writeBytes(raw)
   }
 
+  @Suppress("OverridingDeprecatedMember")
   override fun exceptionCaught(ctx: ChannelHandlerContext, cause: Throwable) {
     ctx.close()
     printError(cause)

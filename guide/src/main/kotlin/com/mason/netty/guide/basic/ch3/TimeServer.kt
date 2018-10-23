@@ -7,10 +7,7 @@ import com.mason.netty.guide.printError
 import io.netty.bootstrap.ServerBootstrap
 import io.netty.buffer.ByteBuf
 import io.netty.buffer.Unpooled
-import io.netty.channel.ChannelHandlerAdapter
-import io.netty.channel.ChannelHandlerContext
-import io.netty.channel.ChannelInitializer
-import io.netty.channel.ChannelOption
+import io.netty.channel.*
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.SocketChannel
 import io.netty.channel.socket.nio.NioServerSocketChannel
@@ -75,7 +72,7 @@ object TimeServer {
     }
   }
 
-  private class TimeServerHandler : ChannelHandlerAdapter() {
+  private class TimeServerHandler : ChannelInboundHandlerAdapter() {
     override fun channelRead(ctx: ChannelHandlerContext, msg: Any) {
       val buf = msg as ByteBuf
       val req = ByteArray(buf.readableBytes())
@@ -96,6 +93,7 @@ object TimeServer {
       ctx.flush()
     }
 
+    @Suppress("OverridingDeprecatedMember")
     override fun exceptionCaught(ctx: ChannelHandlerContext, cause: Throwable) {
       ctx.close()
       printError(cause)

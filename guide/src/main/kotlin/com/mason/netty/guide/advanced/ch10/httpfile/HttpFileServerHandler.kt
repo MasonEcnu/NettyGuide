@@ -3,8 +3,6 @@ package com.mason.netty.guide.advanced.ch10.httpfile
 import io.netty.buffer.Unpooled
 import io.netty.channel.*
 import io.netty.handler.codec.http.*
-import io.netty.handler.codec.http.HttpHeaders.isKeepAlive
-import io.netty.handler.codec.http.HttpHeaders.setContentLength
 import io.netty.handler.stream.ChunkedFile
 import io.netty.util.CharsetUtil
 import java.io.File
@@ -20,17 +18,17 @@ import javax.activation.MimetypesFileTypeMap
  */
 class HttpFileServerHandler(private val url: String) : SimpleChannelInboundHandler<FullHttpRequest>() {
 
-  override fun messageReceived(ctx: ChannelHandlerContext, request: FullHttpRequest) {
-    if (!request.decoderResult.isSuccess) {
+  override fun channelRead0(ctx: ChannelHandlerContext, request: FullHttpRequest) {
+    if (!request.decoderResult().isSuccess) {
       sendError(ctx, HttpResponseStatus.BAD_REQUEST)
       return
     }
-    if (request.method !== HttpMethod.GET) {
+    if (request.method() !== HttpMethod.GET) {
       sendError(ctx, HttpResponseStatus.METHOD_NOT_ALLOWED)
       return
     }
 
-    val uri = request.uri
+    val uri = request.uri()
     val path = sanitizeUri(uri)
     if (path == null) {
       sendError(ctx, HttpResponseStatus.FORBIDDEN)
@@ -65,11 +63,11 @@ class HttpFileServerHandler(private val url: String) : SimpleChannelInboundHandl
 
     val fileLength = randomAccessFile.length()
     val response = DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK)
-    setContentLength(response, fileLength)
+    HttpUtil.setContentLength(response, fileLength)
     setContentTypeHeader(response, file)
 
-    if (isKeepAlive(request)) {
-      response.headers().set(HttpHeaders.Names.CONNECTION, HttpHeaders.Values.KEEP_ALIVE)
+    if (HttpUtil.isKeepAlive(request)) {
+      response.headers().set(HttpHeaderNames.CONNECTION, HttpHeaderValues.KEEP_ALIVE)
     }
 
     ctx.write(response)
@@ -91,11 +89,11 @@ class HttpFileServerHandler(private val url: String) : SimpleChannelInboundHandl
     })
 
     val lastContentFuture = ctx.writeAndFlush(LastHttpContent.EMPTY_LAST_CONTENT)
-    if (!isKeepAlive(request))
+    if (!HttpUtil.isKeepAlive(request))
       lastContentFuture.addListener(ChannelFutureListener.CLOSE)
-
   }
 
+  @Suppress("OverridingDeprecatedMember")
   override fun exceptionCaught(ctx: ChannelHandlerContext, cause: Throwable) {
     cause.printStackTrace()
     if (ctx.channel().isActive)
@@ -135,7 +133,7 @@ class HttpFileServerHandler(private val url: String) : SimpleChannelInboundHandl
 
     private fun sendListing(ctx: ChannelHandlerContext, dir: File) {
       val response = DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK)
-      response.headers().set(HttpHeaders.Names.CONTENT_TYPE, "text/html; charset=UTF-8")
+      response.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/html; charset=UTF-8")
 
       val dirPath = dir.path
       val buf = StringBuilder()
@@ -179,20 +177,20 @@ class HttpFileServerHandler(private val url: String) : SimpleChannelInboundHandl
 
     private fun sendRedirect(ctx: ChannelHandlerContext, newUri: String) {
       val response = DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.FOUND)
-      response.headers().set(HttpHeaders.Names.LOCATION, newUri)
+      response.headers().set(HttpHeaderNames.LOCATION, newUri)
       ctx.writeAndFlush(response).addListener(ChannelFutureListener.CLOSE)
     }
 
     private fun sendError(ctx: ChannelHandlerContext, status: HttpResponseStatus) {
       val response = DefaultFullHttpResponse(HttpVersion.HTTP_1_1, status,
           Unpooled.copiedBuffer("Failure: " + status.toString() + "\r\n", CharsetUtil.UTF_8))
-      response.headers().set(HttpHeaders.Names.CONTENT_TYPE, "text/html; charset=UTF-8")
+      response.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/html; charset=UTF-8")
       ctx.writeAndFlush(response).addListener(ChannelFutureListener.CLOSE)
     }
 
     private fun setContentTypeHeader(response: HttpResponse, file: File) {
       val fileTypeMap = MimetypesFileTypeMap()
-      response.headers().set(HttpHeaders.Names.CONTENT_TYPE, fileTypeMap.getContentType(file.path))
+      response.headers().set(HttpHeaderNames.CONTENT_TYPE, fileTypeMap.getContentType(file.path))
     }
   }
 }

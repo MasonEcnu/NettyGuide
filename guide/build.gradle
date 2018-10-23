@@ -5,7 +5,7 @@ plugins {
 
 dependencies {
   compile("com.typesafe.akka:akka-actor_2.12:2.5.17")
-  compile group: 'io.netty', name: 'netty-all', version: '5.0.0.Alpha1'
+  compile group: 'io.netty', name: 'netty-all', version: '4.1.30.Final'
   compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
   compile group: 'org.msgpack', name: 'msgpack', version: '0.6.12'
   compile group: 'org.jboss.marshalling', name: 'jboss-marshalling', version: '2.0.6.Final'

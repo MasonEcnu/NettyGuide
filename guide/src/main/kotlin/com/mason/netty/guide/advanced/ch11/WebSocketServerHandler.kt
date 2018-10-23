@@ -7,8 +7,6 @@ import io.netty.channel.ChannelFutureListener
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.SimpleChannelInboundHandler
 import io.netty.handler.codec.http.*
-import io.netty.handler.codec.http.HttpHeaders.isKeepAlive
-import io.netty.handler.codec.http.HttpHeaders.setContentLength
 import io.netty.handler.codec.http.websocketx.*
 import java.lang.UnsupportedOperationException
 import java.util.*
@@ -24,7 +22,7 @@ class WebSocketServerHandler : SimpleChannelInboundHandler<Any>() {
 
   private var handshaker: WebSocketServerHandshaker? = null
 
-  override fun messageReceived(ctx: ChannelHandlerContext, msg: Any) {
+  override fun channelRead0(ctx: ChannelHandlerContext, msg: Any) {
     // 传统HTTP接入
     if (msg is FullHttpRequest) {
       handleHttpRequest(ctx, msg)
@@ -62,7 +60,7 @@ class WebSocketServerHandler : SimpleChannelInboundHandler<Any>() {
 
   private fun handleHttpRequest(ctx: ChannelHandlerContext, request: FullHttpRequest) {
     // 如果HTTP解析失败，返回HTTP异常
-    if (!request.decoderResult.isSuccess || "websocket" != request.headers().get("Upgrade")) {
+    if (!request.decoderResult().isSuccess || "websocket" != request.headers().get("Upgrade")) {
       sendHttpResponse(ctx, request, DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.BAD_REQUEST))
       return
     }
@@ -70,7 +68,7 @@ class WebSocketServerHandler : SimpleChannelInboundHandler<Any>() {
     val wsFactory = WebSocketServerHandshakerFactory("ws://localhost:$DEFAULT_PORT/websocket", null, false)
     handshaker = wsFactory.newHandshaker(request)
     if (handshaker == null) {
-      WebSocketServerHandshakerFactory.sendUnsupportedWebSocketVersionResponse(ctx.channel())
+      WebSocketServerHandshakerFactory.sendUnsupportedVersionResponse(ctx.channel())
     } else {
       val future = handshaker?.handshake(ctx.channel(), request)
       // 握手成功，则动态添加WebSocket的decoder和encoder
@@ -88,16 +86,16 @@ class WebSocketServerHandler : SimpleChannelInboundHandler<Any>() {
 
   private fun sendHttpResponse(ctx: ChannelHandlerContext, request: FullHttpRequest, response: FullHttpResponse) {
     // 返回应答给客户端
-    if (response.status.code() != 200) {
-      val buf = Unpooled.copiedBuffer(response.status.toString(), Charsets.UTF_8)
+    if (response.status().code() != 200) {
+      val buf = Unpooled.copiedBuffer(response.status().toString(), Charsets.UTF_8)
       response.content().writeBytes(buf)
       buf.release()
-      setContentLength(response, response.content().readableBytes().toLong())
+      HttpUtil.setContentLength(response, response.content().readableBytes().toLong())
     }
 
     // 如果是非Keep-Alive，关闭连接
     val future = ctx.channel().writeAndFlush(response)
-    if (!isKeepAlive(request) || response.status.code() != 200) {
+    if (!HttpUtil.isKeepAlive(request) || response.status().code() != 200) {
       future.addListener(ChannelFutureListener.CLOSE)
     }
   }
@@ -106,6 +104,7 @@ class WebSocketServerHandler : SimpleChannelInboundHandler<Any>() {
     ctx.flush()
   }
 
+  @Suppress("OverridingDeprecatedMember")
   override fun exceptionCaught(ctx: ChannelHandlerContext, cause: Throwable) {
     printError(cause)
     ctx.close()

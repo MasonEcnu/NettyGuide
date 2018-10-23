@@ -46,7 +46,7 @@ object TimeClient {
     }
   }
 
-  private class TimeClientHandler : ChannelHandlerAdapter() {
+  private class TimeClientHandler : ChannelInboundHandlerAdapter() {
 
     private var firstMessage: ByteBuf
 
@@ -73,6 +73,7 @@ object TimeClient {
       println("Now is: $body")
     }
 
+    @Suppress("OverridingDeprecatedMember")
     override fun exceptionCaught(ctx: ChannelHandlerContext, cause: Throwable) {
       ctx.close()
       printError(cause)

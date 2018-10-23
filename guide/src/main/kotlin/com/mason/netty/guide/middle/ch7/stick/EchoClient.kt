@@ -6,10 +6,7 @@ import com.mason.netty.guide.codec.MsgpackDecoder
 import com.mason.netty.guide.codec.MsgpackEncoder
 import com.mason.netty.guide.printError
 import io.netty.bootstrap.Bootstrap
-import io.netty.channel.ChannelHandlerAdapter
-import io.netty.channel.ChannelHandlerContext
-import io.netty.channel.ChannelInitializer
-import io.netty.channel.ChannelOption
+import io.netty.channel.*
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.SocketChannel
 import io.netty.channel.socket.nio.NioSocketChannel
@@ -62,7 +59,7 @@ object EchoClient {
     }
   }
 
-  private class EchoClientHandler(private val sendNumber: Int) : ChannelHandlerAdapter() {
+  private class EchoClientHandler(private val sendNumber: Int) : ChannelInboundHandlerAdapter() {
     override fun channelActive(ctx: ChannelHandlerContext) {
       val infos = getUserInfos()
       // 有丢包。。好神奇！
@@ -79,6 +76,7 @@ object EchoClient {
       ctx.flush()
     }
 
+    @Suppress("OverridingDeprecatedMember")
     override fun exceptionCaught(ctx: ChannelHandlerContext, cause: Throwable) {
       ctx.close()
       printError(cause)

@@ -7,10 +7,7 @@ import com.mason.netty.guide.codec.MsgpackEncoder
 import com.mason.netty.guide.printError
 import io.netty.bootstrap.ServerBootstrap
 import io.netty.buffer.Unpooled
-import io.netty.channel.ChannelHandlerAdapter
-import io.netty.channel.ChannelHandlerContext
-import io.netty.channel.ChannelInitializer
-import io.netty.channel.ChannelOption
+import io.netty.channel.*
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.SocketChannel
 import io.netty.channel.socket.nio.NioServerSocketChannel
@@ -68,7 +65,7 @@ object EchoServer {
 
   }
 
-  private class EchoServerHandler : ChannelHandlerAdapter() {
+  private class EchoServerHandler : ChannelInboundHandlerAdapter() {
 
     override fun channelRead(ctx: ChannelHandlerContext, msg: Any) {
       println("Server receives the msgpack message: [$msg]")
@@ -81,6 +78,7 @@ object EchoServer {
       ctx.flush()
     }
 
+    @Suppress("OverridingDeprecatedMember")
     override fun exceptionCaught(ctx: ChannelHandlerContext, cause: Throwable) {
       printError(cause)
       ctx.close()
