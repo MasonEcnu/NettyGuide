@@ -78,7 +78,7 @@ object SubReqClient {
     }
 
     override fun channelRead(ctx: ChannelHandlerContext, msg: Any) {
-      println("Receive server response: \n[\n$msg]")
+      println("Receive netty.guide.ch12.server response: \n[\n$msg]")
     }
 
     override fun channelReadComplete(ctx: ChannelHandlerContext) {

@@ -63,7 +63,7 @@ object EchoClient {
     }
 
     override fun channelRead(ctx: ChannelHandlerContext, msg: Any) {
-      println("This is the ${++counter} times when client receives server: $msg")
+      println("This is the ${++counter} times when netty.guide.ch12.client receives netty.guide.ch12.server: $msg")
     }
 
     override fun channelReadComplete(ctx: ChannelHandlerContext) {

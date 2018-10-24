@@ -23,7 +23,7 @@ object TimeClient {
       reader = BufferedReader(InputStreamReader(socket.getInputStream()))
       writer = PrintWriter(socket.getOutputStream(), true)
       writer.println("QUERY TIME ORDER")
-      println("Send order to server successfully")
+      println("Send order to netty.guide.ch12.server successfully")
       val result = reader.readLine()
       println("Now is: $result")
     } catch (ce: ConnectException) {

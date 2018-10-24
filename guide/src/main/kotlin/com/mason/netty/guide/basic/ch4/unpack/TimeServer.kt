@@ -52,7 +52,7 @@ object TimeServer {
       val future = serverBoot.bind(DEFAULT_PORT).sync()
 
       if (future.isSuccess) {
-        println("The time server is started at DEFAULT_PORT: $DEFAULT_PORT")
+        println("The time netty.guide.ch12.server is started at DEFAULT_PORT: $DEFAULT_PORT")
       }
 
       /**
@@ -91,7 +91,7 @@ object TimeServer {
 
     override fun channelRead(ctx: ChannelHandlerContext, msg: Any) {
       val body = msg as String
-      println("The time server receives order: $body; the counter is: ${++counter}")
+      println("The time netty.guide.ch12.server receives order: $body; the counter is: ${++counter}")
       val currentTime = (if (QUERY_ORDER.equals(body, true)) Date().toString() else BAD_ORDER) + System.getProperty("line.separator")
       val resp = Unpooled.copiedBuffer(currentTime.toByteArray())
       ctx.write(resp)

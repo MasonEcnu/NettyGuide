@@ -30,7 +30,7 @@ object WebSocketServer {
           .childHandler(object : ChannelInitializer<SocketChannel>() {
             override fun initChannel(ch: SocketChannel) {
               val pipeline = ch.pipeline()
-              pipeline.addLast("http-codec", HttpServerCodec())
+              pipeline.addLast("http-netty.guide.ch12.codec", HttpServerCodec())
                   .addLast("aggregator", HttpObjectAggregator(65536))
                   // ChunkedWriteHandler：用于支持客户端和服务端的WebSocket通信
                   .addLast("http-chunked", ChunkedWriteHandler())
@@ -41,7 +41,7 @@ object WebSocketServer {
       // 绑定端口
       val future = serverBoot.bind(DEFAULT_PORT).sync()
 
-      println("Web socket server started at port: $DEFAULT_PORT")
+      println("Web socket netty.guide.ch12.server started at port: $DEFAULT_PORT")
 
       println("Open your browser and navigate to http://localhost:$DEFAULT_PORT/")
 

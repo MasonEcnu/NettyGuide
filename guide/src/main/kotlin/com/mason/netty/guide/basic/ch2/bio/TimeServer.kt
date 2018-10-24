@@ -17,7 +17,7 @@ object TimeServer {
   @JvmStatic
   fun main(args: Array<String>) {
     val server = ServerSocket(DEFAULT_PORT)
-    println("The time server is started at DEFAULT_PORT: $DEFAULT_PORT")
+    println("The time netty.guide.ch12.server is started at DEFAULT_PORT: $DEFAULT_PORT")
     var socket: Socket
     try {
       while (true) {
@@ -47,7 +47,7 @@ class TimeServerHandler(private val socket: Socket) : Runnable {
         if (body == null) {
           break
         }
-        println("The time server receive order: $body")
+        println("The time netty.guide.ch12.server receive order: $body")
         val msg = if ("QUERY TIME ORDER".equals(body, true)) Date(currentTime).toString() else "Bad Order"
         writer.println(msg)
       }

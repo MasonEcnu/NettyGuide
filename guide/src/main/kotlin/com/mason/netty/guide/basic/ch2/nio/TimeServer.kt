@@ -37,7 +37,7 @@ class MultiplexerTimeServer : Runnable {
       serverChannel.configureBlocking(false)
       serverChannel.socket().bind(InetSocketAddress(DEFAULT_PORT), 1024)
       serverChannel.register(selector, SelectionKey.OP_ACCEPT)
-      println("The time server is started at DEFAULT_PORT: $DEFAULT_PORT")
+      println("The time netty.guide.ch12.server is started at DEFAULT_PORT: $DEFAULT_PORT")
     } catch (ioe: IOException) {
       println("Something is wrong: ${ioe.message}")
       System.exit(1)
@@ -95,7 +95,7 @@ class MultiplexerTimeServer : Runnable {
           val bytes = ByteArray(readBuffer.remaining())
           readBuffer.get(bytes)
           val body = String(bytes, Charsets.UTF_8)
-          println("The time server receives order: $body")
+          println("The time netty.guide.ch12.server receives order: $body")
           val currentTime = if ("QUERY TIME ORDER".equals(body.trim(), false)) System.currentTimeMillis().toString() else "Bad Order"
           doWrite(sc, currentTime)
         } else if (readBytes < 0) {

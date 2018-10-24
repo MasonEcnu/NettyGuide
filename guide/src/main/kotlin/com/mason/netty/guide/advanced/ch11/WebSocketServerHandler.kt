@@ -54,7 +54,7 @@ class WebSocketServerHandler : SimpleChannelInboundHandler<Any>() {
       logger.fine("${ctx.channel()} received $request")
     }
     ctx.channel().write(
-        TextWebSocketFrame("$request, 欢迎使用Netty Websocket服务， 现在时刻： ${Date()}")
+        TextWebSocketFrame("$request, 欢迎使用Netty Websocket服务，现在时刻： ${Date()}")
     )
   }
 

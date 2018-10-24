@@ -35,7 +35,7 @@ class AsyncTimeServerHandler : Runnable {
     try {
       asyncServerSocketChannel = AsynchronousServerSocketChannel.open()
       asyncServerSocketChannel.bind(InetSocketAddress(DEFAULT_PORT))
-      println("The time server is started at DEFAULT_PORT: $DEFAULT_PORT")
+      println("The time netty.guide.ch12.server is started at DEFAULT_PORT: $DEFAULT_PORT")
     } catch (ioe: IOException) {
       printError(ioe)
     }
@@ -75,7 +75,7 @@ class ReadCompletionHandler(val channel: AsynchronousSocketChannel) : Completion
     attachment.get(body)
     try {
       val req = String(body, Charsets.UTF_8)
-      println("The time server receives order: $req")
+      println("The time netty.guide.ch12.server receives order: $req")
       val currentTime = if ("QUERY TIME ORDER".equals(req, true)) Date().toString() else "Bad Order"
       doWrite(currentTime)
     } catch (uee: UnsupportedEncodingException) {

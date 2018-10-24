@@ -51,7 +51,7 @@ object TimeServer {
       val future = serverBoot.bind(DEFAULT_PORT).sync()
 
       if (future.isSuccess) {
-        println("The time server is started at DEFAULT_PORT: $DEFAULT_PORT")
+        println("The time netty.guide.ch12.server is started at DEFAULT_PORT: $DEFAULT_PORT")
       }
 
       /**
@@ -79,7 +79,7 @@ object TimeServer {
       // 将缓冲区中的字节数组复制到req中
       buf.readBytes(req)
       val body = String(req, Charsets.UTF_8)
-      println("The time server receives order: $body")
+      println("The time netty.guide.ch12.server receives order: $body")
       val currentTime = if (QUERY_ORDER.equals(body, true)) Date().toString() else BAD_ORDER
       val resp = Unpooled.copiedBuffer(currentTime.toByteArray())
       ctx.write(resp)

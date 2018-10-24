@@ -70,7 +70,7 @@ object EchoServer {
 
     override fun channelRead(ctx: ChannelHandlerContext, msg: Any) {
       var body = msg as String
-      println("This is the ${++counter} times when the server receives client: [$body]")
+      println("This is the ${++counter} times when the netty.guide.ch12.server receives netty.guide.ch12.client: [$body]")
       body += SEPARATOR
       val echo = Unpooled.copiedBuffer(body.toByteArray())
       ctx.writeAndFlush(echo)

@@ -20,7 +20,7 @@ object TimeServer {
   @JvmStatic
   fun main(args: Array<String>) {
     val server = ServerSocket(DEFAULT_PORT)
-    println("The time server is started at DEFAULT_PORT: $DEFAULT_PORT")
+    println("The time netty.guide.ch12.server is started at DEFAULT_PORT: $DEFAULT_PORT")
     var socket: Socket
     try {
       val singleExecutor = TimeServerHandlerExecutePool(50, 10000)  // 创建IO任务线程池

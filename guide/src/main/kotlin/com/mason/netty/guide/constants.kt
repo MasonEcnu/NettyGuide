@@ -17,6 +17,6 @@ const val BUFFER_CACHE_SIZE = 1024
 const val SEPARATOR = "\$_"
 
 fun printError(err: Throwable) {
-  println("Something is wrong: [${err.javaClass.simpleName}, ${err.message}]")
+  println("Something is wrong: [${err.javaClass.name}, ${err.message}]")
   System.exit(1)
 }

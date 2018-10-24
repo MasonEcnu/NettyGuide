@@ -72,7 +72,7 @@ object SubReqServer {
     override fun channelRead(ctx: ChannelHandlerContext, msg: Any) {
       val req = msg as ProtoSubscribeReq.SubscribeReq
       if ("Mason".equals(req.userName, true)) {
-        println("Service accept client subscribe req: \n[\n$req]")
+        println("Service accept netty.guide.ch12.client subscribe req: \n[\n$req]")
         ctx.writeAndFlush(resp(req.subReqId))
       }
     }

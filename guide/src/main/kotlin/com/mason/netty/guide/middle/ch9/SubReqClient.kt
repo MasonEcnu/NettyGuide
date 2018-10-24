@@ -44,8 +44,8 @@ object SubReqClient {
   private class SubReqClientInitializer : ChannelInitializer<SocketChannel>() {
     override fun initChannel(ch: SocketChannel) {
       val pipeline = ch.pipeline()
-      pipeline.addLast(MarshallerCodeFactory.buildMarshallingDecoder())
-          .addLast(MarshallerCodeFactory.buildMarshallingEncoder())
+      pipeline.addLast(MarshallerCodecFactory.buildMarshallingDecoder())
+          .addLast(MarshallerCodecFactory.buildMarshallingEncoder())
           .addLast(SubReqClientHandler())
     }
   }
@@ -72,7 +72,7 @@ object SubReqClient {
     }
 
     override fun channelRead(ctx: ChannelHandlerContext, msg: Any) {
-      println("Receive server response: \n[\n$msg]")
+      println("Receive netty.guide.ch12.server response: \n[\n$msg]")
     }
 
     override fun channelReadComplete(ctx: ChannelHandlerContext) {

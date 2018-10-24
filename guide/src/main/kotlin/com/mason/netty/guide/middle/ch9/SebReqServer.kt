@@ -9,13 +9,8 @@ import io.netty.channel.*
 import io.netty.channel.nio.NioEventLoopGroup
 import io.netty.channel.socket.SocketChannel
 import io.netty.channel.socket.nio.NioServerSocketChannel
-import io.netty.handler.codec.marshalling.DefaultMarshallerProvider
-import io.netty.handler.codec.marshalling.DefaultUnmarshallerProvider
-import io.netty.handler.codec.marshalling.MarshallingDecoder
-import io.netty.handler.codec.marshalling.MarshallingEncoder
 import io.netty.handler.logging.LogLevel
 import io.netty.handler.logging.LoggingHandler
-import org.jboss.marshalling.*
 
 /**
  * Created by mwu on 2018/10/15
@@ -53,8 +48,8 @@ object SebReqServer {
   private class SebReqServerInitializer : ChannelInitializer<SocketChannel>() {
     override fun initChannel(ch: SocketChannel) {
       val pipeline = ch.pipeline()
-      pipeline.addLast(MarshallerCodeFactory.buildMarshallingDecoder())
-          .addLast((MarshallerCodeFactory.buildMarshallingEncoder()))
+      pipeline.addLast(MarshallerCodecFactory.buildMarshallingDecoder())
+          .addLast((MarshallerCodecFactory.buildMarshallingEncoder()))
           .addLast(SubReqServerHandler())
     }
   }
@@ -68,7 +63,7 @@ object SebReqServer {
     override fun channelRead(ctx: ChannelHandlerContext, msg: Any) {
       val req = msg as ProtoSubscribeReq.SubscribeReq
       if ("Mason".equals(req.userName, true)) {
-        println("Service accept client subscribe req: \n[\n$req]")
+        println("Service accept netty.guide.ch12.client subscribe req: \n[\n$req]")
         ctx.writeAndFlush(resp(req.subReqId))
       }
     }

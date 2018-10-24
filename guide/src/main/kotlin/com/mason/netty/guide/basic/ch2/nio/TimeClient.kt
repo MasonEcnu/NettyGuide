@@ -125,7 +125,7 @@ class TimeClientHandler : Runnable {
     writeBuffer.flip()
     socketChannel.write(writeBuffer)
     if (!writeBuffer.hasRemaining()) {
-      println("Send order to server successfully")
+      println("Send order to netty.guide.ch12.server successfully")
     }
   }
 }
